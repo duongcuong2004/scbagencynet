@@ -535,9 +535,9 @@
                                                 <p role="status" aria-live="polite" aria-atomic="true"></p>
                                                 <ul></ul>
                                             </div>
-                                            <form action="/scbagencynet/get-in-touch/#wpcf7-f995-o1" method="post"
-                                                class="wpcf7-form init" aria-label="留言表单" novalidate="novalidate"
-                                                data-status="init">
+                                            <form id="scbagency-contact-form" action="https://script.google.com/macros/s/AKfycbwt2vHttmfzNBL4c3y88j5kVlJShjUap8Luu8AYZBzjMUqts4n2vRaK-H7yy_PAo_YvFA/exec" method="POST"
+    class="wpcf7-form init" aria-label="留言表单" novalidate="novalidate"
+    data-status="init">
                                                 <fieldset class="hidden-fields-container"><input type="hidden"
                                                         name="_wpcf7" value="995"><input type="hidden"
                                                         name="_wpcf7_version" value="6.1"><input type="hidden"
@@ -1126,7 +1126,7 @@
     <script type="text/javascript" src="js/index_1.js" id="contact-form-7-js"></script>
     <script type="text/javascript" src="js/api.js" id="google-recaptcha-js"></script>
     <script type="text/javascript" src="js/wp-polyfill.min.js" id="wp-polyfill-js"></script>
-    <script type="text/javascript" id="wpcf7-recaptcha-js-before">
+    <!-- <script type="text/javascript" id="wpcf7-recaptcha-js-before">
         /* <![CDATA[ */
         var wpcf7_recaptcha = {
             "sitekey": "6LdBBqUpAAAAAO0-Z6cED6URHQ1zDajGZPKQ5VMl",
@@ -1136,7 +1136,7 @@
             }
         };
         /* ]]> */
-    </script>
+    </script> -->
     <script type="text/javascript" src="js/index_2.js" id="wpcf7-recaptcha-js"></script>
     <script type="text/javascript">
         (function () {
@@ -1146,6 +1146,54 @@
         }());
 
     </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var form = document.getElementById('scbagency-contact-form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault(); // Ngăn chặn việc gửi biểu mẫu mặc định
+
+                var url = form.action; // Lấy Web App URL từ thuộc tính action
+
+                // Lấy dữ liệu biểu mẫu
+                var formData = new FormData(form);
+                
+                // Chuyển đổi FormData sang định dạng URLSearchParams
+                var data = new URLSearchParams();
+                for (const pair of formData) {
+                    data.append(pair[0], pair[1]);
+                }
+                
+                // Thay đổi trạng thái nút Submit
+                var submitButton = form.querySelector('input[type="submit"]');
+                submitButton.value = 'Submitting...';
+                submitButton.disabled = true;
+
+                // Gửi yêu cầu Fetch/AJAX
+                fetch(url, {
+                    method: 'POST',
+                    body: data 
+                })
+                .then(response => response.json())
+                .then(result => {
+                    console.log('Success:', result);
+                    // Hiển thị thông báo thành công cho người dùng
+                    alert('Cảm ơn bạn! Thông tin của bạn đã được gửi thành công.');
+                    form.reset(); // Xóa form sau khi gửi thành công
+                    submitButton.value = 'Submit';
+                    submitButton.disabled = false;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Hiển thị thông báo lỗi
+                    alert('Có lỗi xảy ra khi gửi. Vui lòng thử lại sau.');
+                    submitButton.value = 'Submit';
+                    submitButton.disabled = false;
+                });
+            });
+        }
+    });
+</script>
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MXF7PXDZ" height="0" width="0"
             style="display:none;visibility:hidden"></iframe></noscript>
     </body>
